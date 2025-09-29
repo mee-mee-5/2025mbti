@@ -26,6 +26,9 @@ mbti_df["색상"] = mbti_df["MBTI"].apply(
     lambda x: "학교생활 적응 TOP5 🌟" if x in school_adapt_top5 else "기타 MBTI"
 )
 
+# ✅ 내림차순 정렬
+mbti_df = mbti_df.sort_values(by="비율", ascending=False)
+
 # Plotly 세로 막대그래프
 fig = px.bar(
     mbti_df,
@@ -37,7 +40,7 @@ fig = px.bar(
         "학교생활 적응 TOP5 🌟": "#FF9999",  # 따뜻한 핑크 강조
         "기타 MBTI": "#B0C4DE"             # 은은한 회색-파랑
     },
-    title=f"✨ {selected_country} 의 MBTI 분포 (학교생활 적응 순위 반영) ✨"
+    title=f"✨ {selected_country} 의 MBTI 분포 (학교생활 적응 순위 반영, 내림차순 정렬) ✨"
 )
 
 # 그래프 꾸미기

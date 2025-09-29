@@ -22,14 +22,19 @@ chart = (
     alt.Chart(top10)
     .mark_bar()
     .encode(
-        x=alt.X("Country:N", sort="-y", axis=alt.Axis(labelAngle=-45)),  # 국가명 대각선 표시
+        x=alt.X("Country:N", sort="-y",
+                axis=alt.Axis(
+                    labelAngle=-45,      # 글자 대각선
+                    labelFontSize=12,    # 글자 크기
+                    labelOverlap=False   # 겹치지 않도록
+                )),
         y=alt.Y(f"{selected_mbti}:Q", title=f"{selected_mbti} 비율"),
         tooltip=["Country", selected_mbti]
     )
     .properties(
         title=f"Top 10 국가별 {selected_mbti} 분포",
-        width=600,
-        height=400
+        width=700,   # 그래프 넓게
+        height=450
     )
 )
 

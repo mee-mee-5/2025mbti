@@ -3,39 +3,34 @@ import pandas as pd
 import altair as alt
 
 # 제목
-st.title("🌍 MBTI 유형별 상위 10개 국가 📊")
+st.title("🌍 MBTI 국가별 Top 10 분포 그래프 📊")
 
 # CSV 불러오기
 df = pd.read_csv("countriesMBTI_16types.csv")
 
-# MBTI 유형 리스트 (Country 제외)
-mbti_types = [col for col in df.columns if col != "Country"]
+# MBTI 컬럼 목록 (Country 제외)
+mbti_types = df.columns[1:]
 
-# 드롭다운 메뉴
-selected_type = st.selectbox("🔎 MBTI 유형을 선택하세요", mbti_types)
+# MBTI 유형 선택
+selected_mbti = st.selectbox("🔎 MBTI 유형을 선택하세요:", mbti_types)
 
-# 선택한 유형의 상위 10개 국가 추출
-top10 = df[["Country", selected_type]].sort_values(by=selected_type, ascending=False).head(10)
+# 선택한 MBTI 기준 상위 10개 국가
+top10 = df[["Country", selected_mbti]].nlargest(10, selected_mbti)
 
-# Altair 그래프 생성
+# Altair 그래프
 chart = (
     alt.Chart(top10)
     .mark_bar()
     .encode(
-        x=alt.X("Country", sort="-y", title="국가"),
-        y=alt.Y(selected_type, title=f"{selected_type} 비율"),
-        tooltip=["Country", selected_type]
+        x=alt.X("Country:N", sort="-y", axis=alt.Axis(labelAngle=-45)),  # 국가명 대각선 표시
+        y=alt.Y(f"{selected_mbti}:Q", title=f"{selected_mbti} 비율"),
+        tooltip=["Country", selected_mbti]
     )
     .properties(
-        title=f"🌟 {selected_type} 상위 10개 국가",
+        title=f"Top 10 국가별 {selected_mbti} 분포",
         width=600,
         height=400
     )
 )
 
-# 그래프 출력
 st.altair_chart(chart, use_container_width=True)
-
-# 상위 10개 데이터도 표로 함께 보여주기
-st.subheader("📌 상위 10개 국가 데이터")
-st.dataframe(top10.reset_index(drop=True))
